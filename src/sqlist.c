@@ -2,14 +2,14 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-03 20:46:25
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-06-05 23:25:41
+ * @LastEditTime: 2024-06-06 00:24:33
  * @FilePath: /data_structure/src/sqlist.c
  * @Description: 
  * @
  * @Copyright (c) 2024 by scuec-weiqiang, All Rights Reserved. 
 ***************************************************************/
-#include "sqlist.h"
-#include "malloc.h"
+#include <malloc.h>
+#include "./inc/sqlist.h"
 
 /***************************************************************
  * @description: 初始化顺序表
