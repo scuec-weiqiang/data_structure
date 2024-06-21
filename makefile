@@ -13,7 +13,7 @@ CC = gcc
 CFLAGS = -I$(DIR_INC) -std=c99 -Wall 
 
 $(BIN_TARGET):$(OBJ)
-	$(CC)  $^ -o $@ 
+	$(CC) -g $^ -o $@ 
 
 $(DIR_OBJ)/%.o:$(DIR_SRC)/%c
 	$(CC) $(CFLAGS) -c $< -o $@ 
