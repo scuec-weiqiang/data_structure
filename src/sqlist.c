@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-03 20:46:25
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-06-20 11:33:15
+ * @LastEditTime: 2024-06-21 22:37:56
  * @FilePath: /data_structure/src/sqlist.c
  * @Description: 
  * @
@@ -11,16 +11,11 @@
 #include <malloc.h>
 #include "sqlist.h"  
 
-
- //顺序表结构体定义
-typedef struct sqlist
-{
-   max_uint_t elem_size;//顺序表中一个元素所占的字节数
-   max_uint_t length;//顺序表长度
-   max_uint_t max_length;//顺序表最大长度
-   void *elem;//顺序表的元素数组指针
-}sqlist_t;
-
+static status_t sqlist_clear(const sqlist_t *list);
+static status_t sqlist_get_elem(const sqlist_t *list,max_uint_t pos,void **elem);
+static status_t sqlist_get_position(const sqlist_t *list,void *elem,max_uint_t *pos);
+static status_t sqlist_insert_elem(const sqlist_t *list,void *elem,max_uint_t pos);
+static status_t sqlist_delete_elem(const sqlist_t *list,max_uint_t pos);
 
 /***************************************************************
  * @description: 初始化顺序表
@@ -48,6 +43,12 @@ status_t sqlist_init(sqlist_t **list,max_uint_t elem_size,max_uint_t max_length)
     (*list)->max_length = max_length;
     (*list)->elem_size = elem_size;
     (*list)->elem = (void*)(*list + 1);
+
+    (*list)->clear = sqlist_clear;
+    (*list)->get_elem = sqlist_get_elem;
+    (*list)->get_pos = sqlist_get_position;
+    (*list)->insert = sqlist_insert_elem;
+    (*list)->delete = sqlist_delete_elem;
     
     return OK;
 }
@@ -76,7 +77,7 @@ status_t sqlist_destory(sqlist_t **list)
  * @param {sqlist_t} *list 顺序表的指针
  * @return {status_t} 返回操作状态 <1>:成功  <-2>:顺序表不存在或已满
 ***************************************************************/
-status_t sqlist_clear(const sqlist_t *list)
+static status_t sqlist_clear(const sqlist_t *list)
 {
     void *pelem = list->elem;
     max_uint_t *length = (max_uint_t *)&list->length;
@@ -102,7 +103,7 @@ status_t sqlist_clear(const sqlist_t *list)
  * @param {max_uint_t} *length
  * @return {*}
 ***************************************************************/
-status_t sqlist_get_length(const sqlist_t *list,max_uint_t *length)
+static status_t sqlist_get_length(const sqlist_t *list,max_uint_t *length)
 {
     if(!list)
     {
@@ -121,7 +122,7 @@ status_t sqlist_get_length(const sqlist_t *list,max_uint_t *length)
  * @param {void} *elem 返回的值的指针 
  * @return {status_t} 返回操作状态 <1>:成功  <0>:越界  <-2>:顺序表不存在或已满
 ***************************************************************/
-status_t sqlist_get_elem(const sqlist_t *list,max_uint_t pos,void **elem)
+static status_t sqlist_get_elem(const sqlist_t *list,max_uint_t pos,void **elem)
 {
     if(!list)
     {
@@ -144,7 +145,7 @@ status_t sqlist_get_elem(const sqlist_t *list,max_uint_t pos,void **elem)
  * @param {max_uint_t} pos 值为<elem>的元素的位置（从1开始算起）
  * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
 ***************************************************************/
-status_t sqlist_get_position(const sqlist_t *list,void *elem,max_uint_t *pos)
+static status_t sqlist_get_position(const sqlist_t *list,void *elem,max_uint_t *pos)
 {
     if(!list)
     {
@@ -183,7 +184,7 @@ status_t sqlist_get_position(const sqlist_t *list,void *elem,max_uint_t *pos)
  * @param {max_uint_t} pos 想插入的位置（从1开始算起）
  * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
 ***************************************************************/
-status_t sqlist_insert_elem(const sqlist_t *list,void *elem,max_uint_t pos)
+static status_t sqlist_insert_elem(const sqlist_t *list,void *elem,max_uint_t pos)
 {
     if(!list)
     {
@@ -226,7 +227,7 @@ status_t sqlist_insert_elem(const sqlist_t *list,void *elem,max_uint_t pos)
  * @param {max_uint_t} pos 删除的位置（从1开始算起）
  * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
 ***************************************************************/
-status_t sqlist_delete_elem(const sqlist_t *list,max_uint_t pos)
+static status_t sqlist_delete_elem(const sqlist_t *list,max_uint_t pos)
 {
     if(!list)
     {

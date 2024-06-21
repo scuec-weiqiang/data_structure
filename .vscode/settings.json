@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "typedef.h": "c"
+        "typedef.h": "c",
+        "sqlist.h": "c"
     }
 }
