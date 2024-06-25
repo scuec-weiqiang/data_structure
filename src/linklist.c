@@ -1,0 +1,110 @@
+/***************************************************************
+ * @Author: scuec-weiqiang scuec_weiqiang@qq.com
+ * @Date: 2024-06-25 14:28:39
+ * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
+ * @LastEditTime: 2024-06-25 18:54:05
+ * @FilePath: /data_structure/src/linklist.c
+ * @Description: 
+ * @
+ * @Copyright (c) 2024 by scuec-weiqiang, All Rights Reserved. 
+***************************************************************/
+#include <malloc.h>
+#include "linklist.h"
+
+/***************************************************************
+ * @description: 创建单链表并初始化为0(前插法)
+ * @param {linklist_t} list 单链表头指针
+ * @param {max_uint_t} num 需要初始化的节点个数，若为0则只创建一个头节点。
+ * @return {status_t} 返回操作状态 <1>:成功  <-2>:链表不存在或已满
+***************************************************************/
+status_t linklist_init(linklist_t list,max_uint_t num)
+{
+    list = (elemtype_t *)malloc(sizeof(linklist_t));//创建头节点
+    if(!list)   return OVERFLOW;//创建失败
+
+    list->elem = 0;
+    list->next = NULL;
+
+    link_node_t *p = NULL;
+    for(max_uint_t i=0;i<num;i++)
+    {
+        p = (elemtype_t *)malloc(sizeof(linklist_t));//创建节点
+        p->elem = 0;
+        p->next = list->next;
+        list->next = p;
+    }
+    return OK;
+}
+
+/***************************************************************
+ * @description: 单链表取值
+ * @param {linklist_t} list 单链表头指针
+ * @param {unsigned int} pos 被取值的元素的序号
+ * @param {elemtype_t} *elem 返回的元素
+ * @return {status_t} 返回操作状态 <0>:越界  <1>:成功  <-2>:链表不存在或已满
+***************************************************************/
+status_t linklist_get_elem(linklist_t list,max_uint_t pos,elemtype_t *elem)
+{
+    if(!list)   return OVERFLOW;//链表不存在
+
+    link_node_t *p = list->next;
+    if(!p)  return ERRO;//越界
+
+    for(max_uint_t i=1;i<pos;i++)//遍历,如果能找到，最后应该i==pos
+    {
+        p = p->next;
+        if(!p)  return ERRO;//都遍历到尾节点了还没退出循环说明没找到
+    }
+    *elem = p->elem;
+    return OK;
+}
+
+/***************************************************************
+ * @description: 在单链表中查找值为<elem>的元素，并返回其地址
+ * @param {linklist_t} list 单链表头指针
+ * @param {elemtype_t} elem 需要查找的值
+ * @param {link_node_t} *node 返回对应的地址
+ * @return {*}
+***************************************************************/
+status_t linklist_get_node(linklist_t list,elemtype_t elem,link_node_t **node)
+{
+    if(!list) return OVERFLOW;//链表不存在
+
+    link_node_t *p = list->next;
+    while(p)
+    {
+        if(elem == p->elem)
+        {
+            *node = p;
+            return OK;
+        }
+        p = p->next;
+    }
+    return ERRO;
+}
+
+/***************************************************************
+ * @description: 单链表向序号为<pos>的位置插入元素<elem>
+ * @param {linklist_t} list 单链表头指针
+ * @param {elemtype_t} elem 需要插入的值
+ * @param {max_uint_t} pos 需要插入的位置
+ * @return {*}
+***************************************************************/
+status_t linklist_insert_node(linklist_t list,elemtype_t elem,max_uint_t pos)
+{
+    if(!list)   return OVERFLOW;//链表不存在
+    if(pos<1)   return ERRO;//越界
+
+    link_node_t *p = list;
+    for (max_uint_t i = 1; i < pos; i++)
+    {
+        p = p->next;
+        if(!p)  return ERRO;
+    }
+    
+    link_node_t *s = (elemtype_t *)malloc(sizeof(linklist_t));
+    s->elem = elem;
+    s->next = p->next;
+    p->next = s;
+    return OK;
+}

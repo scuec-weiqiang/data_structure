@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-03 20:46:25
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-06-06 00:24:33
+ * @LastEditTime: 2024-06-25 15:10:38
  * @FilePath: /data_structure/src/sqlist.c
  * @Description: 
  * @
@@ -56,7 +56,7 @@ status_t sqlist_clear(sqlist_t *list)
         return OVERFLOW;//顺序表不存在
     }
 
-    for(unsigned int i=0;i<list->length;i++)
+    for(max_uint_t i=0;i<list->length;i++)
     {
         list->elem[i] = 0;
     }
@@ -71,7 +71,7 @@ status_t sqlist_clear(sqlist_t *list)
  * @param {elemtype_t} *data 返回的值的指针 
  * @return {status_t} 返回操作状态 <1>:成功  <0>:越界  <-2>:顺序表不存在或已满
 ***************************************************************/
-status_t sqlist_get_elem(sqlist_t *list,unsigned int pos,elemtype_t *data)
+status_t sqlist_get_elem(sqlist_t *list,max_uint_t pos,elemtype_t *data)
 {
     if(!list->elem)
     {
@@ -93,14 +93,14 @@ status_t sqlist_get_elem(sqlist_t *list,unsigned int pos,elemtype_t *data)
  * @param {unsigned int} pos 值为<data>的元素的位置（从1开始算起）
  * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
 ***************************************************************/
-status_t sqlist_get_position(sqlist_t *list,elemtype_t data,unsigned int *pos)
+status_t sqlist_get_position(sqlist_t *list,elemtype_t data,max_uint_t *pos)
 {
     if(!list->elem)
     {
         return OVERFLOW;//顺序表不存在
     }
 
-    for(unsigned int i=0;i<list->length;i++)
+    for(max_uint_t i=0;i<list->length;i++)
     {
         if (list->elem[i]==data)
         {
@@ -118,7 +118,7 @@ status_t sqlist_get_position(sqlist_t *list,elemtype_t data,unsigned int *pos)
  * @param {unsigned int} pos 想插入的位置（从1开始算起）
  * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
 ***************************************************************/
-status_t sqlist_insert_elem(sqlist_t *list,elemtype_t data,unsigned int pos)
+status_t sqlist_insert_elem(sqlist_t *list,elemtype_t data,max_uint_t pos)
 {
     if(!list->elem)
     {
@@ -133,7 +133,7 @@ status_t sqlist_insert_elem(sqlist_t *list,elemtype_t data,unsigned int pos)
         return OVERFLOW;//表满了
     }
 
-    for(unsigned int i=list->length;i>pos-1;i--)//第<pos>个后的元素依次向后移动
+    for(max_uint_t i=list->length;i>pos-1;i--)//第<pos>个后的元素依次向后移动
     {
         list->elem[i] = list->elem[i-1];
     }
@@ -142,7 +142,13 @@ status_t sqlist_insert_elem(sqlist_t *list,elemtype_t data,unsigned int pos)
     return OK;
 }
 
-status_t sqlist_delete_elem(sqlist_t *list,unsigned int pos)
+/***************************************************************
+ * @description: 在表中<pos>的位置上删除元素<data>
+ * @param {sqlist_t} *list 顺序表的指针
+ * @param {unsigned int} pos 想删除的位置（从1开始算起）
+ * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
+***************************************************************/
+status_t sqlist_delete_elem(sqlist_t *list,max_uint_t pos)
 {
     if(!list->elem)
     {
@@ -153,7 +159,7 @@ status_t sqlist_delete_elem(sqlist_t *list,unsigned int pos)
         return ERRO;//越界
     }
 
-    for(unsigned int i=pos-1;i>list->length;i++)//第<pos>个后的元素依次向前移动
+    for(max_uint_t i=pos-1;i>list->length;i++)//第<pos>个后的元素依次向前移动
     {
         list->elem[i] = list->elem[i+1];
     }
