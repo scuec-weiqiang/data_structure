@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-25 13:59:34
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-06-25 17:56:18
+ * @LastEditTime: 2024-06-30 11:53:22
  * @FilePath: /data_structure/inc/linklist.h
  * @Description: 
  * @
@@ -20,15 +20,16 @@ typedef struct link_node *linklist_t,link_node_t;
 
 struct link_node
 {
-    elemtype_t elem;//链表数据域
+    elemtype_t data;//链表数据域
     // link_node_t *prior;//前驱指针
     link_node_t *next;//后继指针
 };
 
 status_t linklist_init(linklist_t list,max_uint_t num);
-status_t linklist_get_elem(linklist_t list,max_uint_t pos,elemtype_t *elem);
-status_t linklist_get_node(linklist_t list,elemtype_t elem,link_node_t **node);
-status_t linklist_insert_node(linklist_t list,elemtype_t elem,max_uint_t pos);
+status_t linklist_get_elem(linklist_t list,max_uint_t pos,elemtype_t *data);
+status_t linklist_get_node(linklist_t list,elemtype_t data,link_node_t **node);
+status_t linklist_insert_node(linklist_t list,elemtype_t data,max_uint_t pos);
+status_t linklist_delete_node(linklist_t list,max_uint_t pos);
 // status_t sqlist_init(sqlist_t *list);
 // status_t sqlist_destory(sqlist_t *list);
 // status_t sqlist_clear(sqlist_t *list);
