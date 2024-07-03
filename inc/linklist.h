@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-25 13:59:34
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-07-03 13:57:48
+ * @LastEditTime: 2024-07-03 18:28:59
  * @FilePath: /data_structure/inc/linklist.h
  * @Description: 
  * @
@@ -31,12 +31,5 @@ status_t linklist_insert_node(linklist_t list,elemtype_t data,max_uint_t pos);
 status_t linklist_delete_node(linklist_t list,max_uint_t pos);
 status_t linklist_destory(linklist_t *list);
 status_t linklist_init(linklist_t *list,max_uint_t num);
-// status_t sqlist_init(sqlist_t *list);
-// status_t sqlist_destory(sqlist_t *list);
-// status_t sqlist_clear(sqlist_t *list);
-// status_t sqlist_get_elem(sqlist_t *list,unsigned int pos,elemtype_t *data);
-// status_t sqlist_get_position(sqlist_t *list,elemtype_t data,unsigned int *pos);
-// status_t sqlist_insert_elem(sqlist_t *list,elemtype_t data,unsigned int pos);
-// status_t sqlist_delete_elem(sqlist_t *list,unsigned int pos);
 
 #endif

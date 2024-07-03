@@ -9,7 +9,7 @@
                 "-g",
                 "${workspaceFolder}/src/*.c",
                 "-o",
-                "${workspaceFolder}/${workspaceFolderBasename}",
+                "${workspaceFolder}/bin/${workspaceFolderBasename}",
                 "-I",
                 "${workspaceFolder}/inc/",
                 "-Wall",
