@@ -2,14 +2,14 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-03 20:46:25
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-06-25 15:10:38
+ * @LastEditTime: 2024-07-03 15:10:07
  * @FilePath: /data_structure/src/sqlist.c
  * @Description: 
  * @
  * @Copyright (c) 2024 by scuec-weiqiang, All Rights Reserved. 
 ***************************************************************/
 #include <malloc.h>
-#include "./inc/sqlist.h"
+#include "sqlist.h"
 
 /***************************************************************
  * @description: 初始化顺序表
@@ -21,11 +21,11 @@ status_t sqlist_init(sqlist_t *list)
     list->elem = (elemtype_t *)malloc(sizeof(elemtype_t)*MAXSIZE);//为顺序表分配空间
     if(!list->elem)
     {
-        return OVERFLOW; //分配空间失败
+        return MEMORY_ALLOCATION_ERROR; //分配空间失败
     }
 
     list->length = 0;
-    return OK;
+    return SUCCESS;
 }
 
 /***************************************************************
@@ -37,11 +37,11 @@ status_t sqlist_destory(sqlist_t *list)
 {
     if(!list->elem)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
 
     free(list->elem);
-    return OK;
+    return SUCCESS;
 }
 
 /***************************************************************
@@ -53,7 +53,7 @@ status_t sqlist_clear(sqlist_t *list)
 {
     if(!list->elem)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
 
     for(max_uint_t i=0;i<list->length;i++)
@@ -61,7 +61,7 @@ status_t sqlist_clear(sqlist_t *list)
         list->elem[i] = 0;
     }
     list->length = 0;
-    return OK;
+    return SUCCESS;
 }
 
 /***************************************************************
@@ -75,15 +75,15 @@ status_t sqlist_get_elem(sqlist_t *list,max_uint_t pos,elemtype_t *data)
 {
     if(!list->elem)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
 
     if(pos<1||pos>list->length)
     {
-        return ERRO;//越界
+        return INDEX_OUT_OF_BOUNDS_ERROR;//越界
     }
     *data = list->elem[pos-1];
-    return OK;
+    return SUCCESS;
 }
 
 /***************************************************************
@@ -97,7 +97,7 @@ status_t sqlist_get_position(sqlist_t *list,elemtype_t data,max_uint_t *pos)
 {
     if(!list->elem)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
 
     for(max_uint_t i=0;i<list->length;i++)
@@ -105,10 +105,10 @@ status_t sqlist_get_position(sqlist_t *list,elemtype_t data,max_uint_t *pos)
         if (list->elem[i]==data)
         {
             *pos = i+1;
-            return OK; //找到了
+            return SUCCESS; //找到了
         }
     }
-    return ERRO;//没找到
+    return NOT_FOUND_ERROR;//没找到
 }
 
 /***************************************************************
@@ -122,15 +122,15 @@ status_t sqlist_insert_elem(sqlist_t *list,elemtype_t data,max_uint_t pos)
 {
     if(!list->elem)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
     if(pos<1||pos>list->length+1)//  允许pos=list->length，这种情况是在表尾插入
     {
-        return ERRO;//越界
+        return INDEX_OUT_OF_BOUNDS_ERROR;//越界
     }
     if(list->length==MAXSIZE)
     {
-        return OVERFLOW;//表满了
+        return FULL_SIZE_ERROR;//表满了
     }
 
     for(max_uint_t i=list->length;i>pos-1;i--)//第<pos>个后的元素依次向后移动
@@ -139,7 +139,7 @@ status_t sqlist_insert_elem(sqlist_t *list,elemtype_t data,max_uint_t pos)
     }
     list->elem[pos-1] = data;
     list->length++;//表长加1
-    return OK;
+    return SUCCESS;
 }
 
 /***************************************************************
@@ -152,11 +152,11 @@ status_t sqlist_delete_elem(sqlist_t *list,max_uint_t pos)
 {
     if(!list->elem)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
     if(pos<1||pos>list->length+1)//  允许pos=list->length，这种情况是在表尾删除
     {
-        return ERRO;//越界
+        return INDEX_OUT_OF_BOUNDS_ERROR;//越界
     }
 
     for(max_uint_t i=pos-1;i>list->length;i++)//第<pos>个后的元素依次向前移动
@@ -164,5 +164,5 @@ status_t sqlist_delete_elem(sqlist_t *list,max_uint_t pos)
         list->elem[i] = list->elem[i+1];
     }
     list->length--;//表长减1
-    return OK;
+    return SUCCESS;
 }

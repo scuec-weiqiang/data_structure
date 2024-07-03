@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-03 19:57:07
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-06-30 12:08:37
+ * @LastEditTime: 2024-07-03 18:17:24
  * @FilePath: /data_structure/src/main.c
  * @Description: 
  * @
@@ -39,7 +39,18 @@ int main(void)
 
 	//单链表测试
 	linklist_t p;
-	linklist_init(p,2);
+	status_t st = 0;
+	st = linklist_init(&p,0);
+	st = linklist_insert_node(p,255,10);
+	st = linklist_insert_node(p,128,2);
+	st = linklist_insert_node(p,64,3);
+	st = linklist_delete_node(p,1);
+	link_node_t *s = NULL_PTR;
+	st = linklist_get_node(p,128,&s);
+	int a = 0;
+	st = linklist_get_elem(p,2,&a);
+	st = linklist_destory(&p);
+	printf("%d",st);
 	return 0;
 	
 }
