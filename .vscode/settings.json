@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "typedef.h": "c"
+        "typedef.h": "c",
+        "my_utils.h": "c",
+        "linklist.h": "c",
+        "sqlist.h": "c"
     }
 }

@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-19 17:48:33
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-06-19 18:29:27
+ * @LastEditTime: 2024-07-06 14:53:57
  * @FilePath: /data_structure/inc/typedef.h
  * @Description: 
  * @
@@ -41,12 +41,20 @@
         typedef short int16_t;
         typedef unsigned short uint16_t;       
         typedef uint16_t max_uint_t;
-    #endif 
+    #endif  
 
-    #define OK 1            
-    #define ERRO 0          
-    #define OVERFLOW -2    
-    typedef int status_t;
+    #define NULL_PTR ((void *)0)
+
+    typedef enum
+    {
+        SUCCESS,//成功
+        NOT_FOUND_ERROR,//未找到匹配的数据
+        FULL_SIZE_ERROR,//表/缓冲区已满
+        INDEX_OUT_OF_BOUNDS_ERROR,//标号索引越界
+        MEMORY_ALLOCATION_ERROR,//内存分配错误
+        MEMORY_FREE_ERROR,//内存释放错误
+        NULL_POINTER_ERROR,//空指针
+        TIMEOUT_ERROR,//超时
+    }status_t;
     
-
 #endif 

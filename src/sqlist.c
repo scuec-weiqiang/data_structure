@@ -2,252 +2,249 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-03 20:46:25
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-06-20 11:33:15
+ * @LastEditTime: 2024-07-07 15:39:39
  * @FilePath: /data_structure/src/sqlist.c
- * @Description: 
+ * @brief: 
  * @
  * @Copyright (c) 2024 by scuec-weiqiang, All Rights Reserved. 
 ***************************************************************/
 #include <malloc.h>
-#include "sqlist.h"  
-
+#include "typedef.h" 
+#include "my_utils.h"
 
  //顺序表结构体定义
-typedef struct sqlist
+typedef struct sqlist sqlist_t;
+struct sqlist
 {
-   max_uint_t elem_size;//顺序表中一个元素所占的字节数
+   max_uint_t sizeof_elemtype;//顺序表中一个元素所占的字节数
    max_uint_t length;//顺序表长度
    max_uint_t max_length;//顺序表最大长度
-   void *elem;//顺序表的元素数组指针
-}sqlist_t;
-
+   void *data;//顺序表的元素数组指针
+};
 
 /***************************************************************
- * @description: 初始化顺序表
+ * @brief 初始化顺序表
  * @param {sqlist_t} *list 顺序表的指针
- * @param {max_uint_t} elem_size 顺序表中一个元素所占的字节数
- * @param {max_uint_t} max_length 指定顺序表的最大长度，不能超过长度限制（长度限制由<elem_size>参数自动计算得出）
- * @return {status_t} 返回操作状态 <1>:成功  <-2>:顺序表不存在或已满
+ * @param {max_uint_t} sizeof_elemtype 顺序表中一个元素所占的字节数
+ * @param {max_uint_t} max_length 指定顺序表的最大长度，不能超过长度限制（长度限制由<sizeof_elemtype>参数自动计算得出）
+ * @return {status_t} 
 ***************************************************************/
-status_t sqlist_init(sqlist_t **list,max_uint_t elem_size,max_uint_t max_length)
+status_t sqlist_init(sqlist_t **list,max_uint_t sizeof_elemtype,max_uint_t max_length)
 {
-    max_uint_t temp = -1;
-    temp = temp/elem_size;//由一个元素所占的字节数计算出表的最大长度
+    max_uint_t temp = -1;//手动使无符号溢出，使其达到最大值
+    temp = temp/sizeof_elemtype;//由一个元素所占的字节数计算出表的最大长度
     if(max_length>temp)//如果指定的长度超过最大长度，则对指定长度进行限制
     {
         max_length = temp;
     }
     
-    *list = (sqlist_t*) malloc(sizeof(sqlist_t) + elem_size*max_length);//为顺序表分配空间
+    *list = (sqlist_t*) malloc(sizeof(sqlist_t) + sizeof_elemtype*max_length);//为顺序表分配空间
     if(!list)
     {
-        return OVERFLOW; //分配空间失败
+        return MEMORY_ALLOCATION_ERROR; //分配空间失败
     }
 
     (*list)->length = 0;
     (*list)->max_length = max_length;
-    (*list)->elem_size = elem_size;
-    (*list)->elem = (void*)(*list + 1);
-    
-    return OK;
+    (*list)->sizeof_elemtype = sizeof_elemtype;
+    (*list)->data = (void*)(*list + 1);
+    mem_set((*list)->data,0,sizeof_elemtype*max_length);
+
+    return SUCCESS;
 }
 
-
 /***************************************************************
- * @description: 销毁顺序表
+ * @brief 销毁顺序表
  * @param {sqlist_t} *list 顺序表的指针
- * @return {status_t} 返回操作状态 <1>:成功  <-2>:顺序表不存在或已满
+ * @return {status_t} 
 ***************************************************************/
 status_t sqlist_destory(sqlist_t **list)
 {
     if(!list)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
 
     free(*list);
     *list = NULL;
-    return OK;
+    return SUCCESS;
 }
 
-
 /***************************************************************
- * @description: 清空顺序表
+ * @brief 清空顺序表
  * @param {sqlist_t} *list 顺序表的指针
- * @return {status_t} 返回操作状态 <1>:成功  <-2>:顺序表不存在或已满
+ * @return {status_t}
 ***************************************************************/
-status_t sqlist_clear(const sqlist_t *list)
+status_t sqlist_clear(sqlist_t *list)
 {
-    void *pelem = list->elem;
+    void *pdata = list->data;
     max_uint_t *length = (max_uint_t *)&list->length;
-    max_uint_t elem_size = list->elem_size;
+    max_uint_t sizeof_elemtype = list->sizeof_elemtype;
 
     if(!list)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
-
-    for(max_uint_t i=0;i<((*length)*elem_size);i++)
-    {
-        *((char*)pelem + i) = 0;
-    }
+    mem_set(pdata,0,(*length)*sizeof_elemtype);
     *length = 0;
-    return OK;
+    return SUCCESS;
 }
 
-
 /***************************************************************
- * @description: 获得顺序表中元素个数
+ * @brief 获得顺序表中元素个数
  * @param {sqlist_t} *list
  * @param {max_uint_t} *length
  * @return {*}
 ***************************************************************/
-status_t sqlist_get_length(const sqlist_t *list,max_uint_t *length)
+status_t sqlist_get_length(sqlist_t *list,max_uint_t *length)
 {
     if(!list)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
 
     *length = list->length;
-    return OK;
+    return SUCCESS;
 }
 
-
 /***************************************************************
- * @description: 返回顺序表中位置为<pos>的元素的值。
- * @param {sqlist_t} *list 顺序表的指针
- * @param {int} pos 指定位置（从1开始算起）
- * @param {void} *elem 返回的值的指针 
- * @return {status_t} 返回操作状态 <1>:成功  <0>:越界  <-2>:顺序表不存在或已满
+ * @brief 将顺序表中位置为<index>的元素赋值为<data>。
+ *        注意，当表中元素个数为0时需要先使用insert函数插入才可赋值
+ * @param {sqlist_t} *list [in]:  
+ * @param {max_uint_t} index [in]:  
+ * @param {void} *data [in]:  
+ * @return {*}
 ***************************************************************/
-status_t sqlist_get_elem(const sqlist_t *list,max_uint_t pos,void **elem)
+status_t sqlist_set_data(sqlist_t *list,max_uint_t index,void *data)
 {
     if(!list)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
 
-    if(pos<1||pos>list->length)
+    if(index<1||index>list->length)
     {
-        return ERRO;//越界
+        return INDEX_OUT_OF_BOUNDS_ERROR;//越界
     }
-    (*elem) = (list->elem + (pos-1)*list->elem_size);
-    return OK;
+    mem_cpy(data,(list->data + (index-1)*list->sizeof_elemtype),list->sizeof_elemtype);
+    return SUCCESS;
 }
 
-
 /***************************************************************
- * @description: 返回顺序表中第一个值为<elem>的元素的位置
+ * @brief 返回顺序表中位置为<index>的元素的值。
  * @param {sqlist_t} *list 顺序表的指针
- * @param {sqlist_elem_t} elem 想要在顺序表中查找的值
- * @param {max_uint_t} pos 值为<elem>的元素的位置（从1开始算起）
- * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
+ * @param {int} index 指定位置（从1开始算起）
+ * @param {void} *data 返回的值的指针 
+ * @return {status_t} 
 ***************************************************************/
-status_t sqlist_get_position(const sqlist_t *list,void *elem,max_uint_t *pos)
+status_t sqlist_get_data(sqlist_t *list,max_uint_t index,void *data)
 {
     if(!list)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
 
-    void *pelem = list->elem;
-    max_uint_t elem_size = list->elem_size;
-    max_uint_t cnt = 0;
-    
+    if(index<1||index>list->length)
+    {
+        return INDEX_OUT_OF_BOUNDS_ERROR;//越界
+    }
+    mem_cpy((list->data + (index-1)*list->sizeof_elemtype),data,list->sizeof_elemtype);
+    return SUCCESS;
+}
+
+/***************************************************************
+ * @brief 返回顺序表中第一个值为<data>的元素的位置
+ * @param {sqlist_t} *list 顺序表的指针
+ * @param {sqlist_elem_t} data 想要在顺序表中查找的值
+ * @param {max_uint_t} index 值为<data>的元素的位置（从1开始算起）
+ * @return {status_t} 
+***************************************************************/
+status_t sqlist_get_position(sqlist_t *list,void *data,max_uint_t *index)
+{
+    if(!list)
+    {
+        return NULL_POINTER_ERROR;//顺序表不存在
+    }
+
+    void *pdata = list->data;
+    max_uint_t sizeof_elemtype = list->sizeof_elemtype;
+
+    *index = 0;
     for(max_uint_t i=0;i<list->length;i++)
     {
-        cnt = 0;
-        for(max_uint_t j=0;j<elem_size;j++)
+        if(0 == mem_cmp( ((char*)pdata + i*sizeof_elemtype),data,sizeof_elemtype) )
         {
-            if( *((char*)pelem + i*elem_size + j) == *((char*)elem + j) )
-            {
-                cnt++;
-            }  
-        }
-        if(list->elem_size == cnt)
-        {
-            *pos = i+1;
-            return OK;
+            *index = i+1;
+            return SUCCESS;
         }
     }
 
-    return ERRO;//没找到
+    return NOT_FOUND_ERROR;//没找到
 }
 
-
 /***************************************************************
- * @description: 在表中<pos>的位置上插入元素<elem>
+ * @brief 在表中<index>的位置上插入元素<data>
  * @param {sqlist_t} *list 顺序表的指针
- * @param {sqlist_elem_t} elem 想要在顺序表中插入的值
- * @param {max_uint_t} pos 想插入的位置（从1开始算起）
- * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
+ * @param {sqlist_elem_t} data 想要在顺序表中插入的值
+ * @param {max_uint_t} index 想插入的位置（从1开始算起）
+ * @return {status_t} 
 ***************************************************************/
-status_t sqlist_insert_elem(const sqlist_t *list,void *elem,max_uint_t pos)
+status_t sqlist_insert_data(sqlist_t *list,max_uint_t index,void *data)
 {
     if(!list)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
-    if(pos<1||pos>list->length+1)//  允许pos=list->length，这种情况是在表尾插入
+    if(index<1||index>list->length+1)//  允许pos=list->length，这种情况是在表尾插入
     {
-        return ERRO;//越界
+        return INDEX_OUT_OF_BOUNDS_ERROR;//越界
     }
     if(list->length==list->max_length)
     {
-        return OVERFLOW;//表满了
+        return FULL_SIZE_ERROR;//表满了
     }
 
-    void *pelem = list->elem;
+    void *pdata = list->data;
     max_uint_t *length = (max_uint_t *)&list->length;
-    max_uint_t elem_size = list->elem_size;
+    max_uint_t sizeof_elemtype = list->sizeof_elemtype;
     
-    for(max_uint_t i=(*length);i>(pos-1);i--)//第<pos>个后的元素中的每个字节数据依次向后移动<elem_size>个字节
-    {
-        for(max_uint_t j=elem_size;j>0;j--)
-        {
-            *((char*)pelem + i*elem_size + j-1) = *((char*)pelem +(i-1)*elem_size + j-1);
-        }
-    }
-    
-    for(max_uint_t j=elem_size;j>0;j--)//向<pos>位置的元素写入要插入的数据
-    {
-        *((char*)pelem + (pos-1)*elem_size + j-1) = *((char*)elem + j-1);
-    }
-
+    //第<index>个后的所有元素整体向右移动<sizeof_elemtype>个字节
+    mem_right_shift(pdata,((*length)-index+1)*sizeof_elemtype,sizeof_elemtype);
+    //向<index>位置的元素写入要插入的数据
+    mem_cpy(data,((char*)pdata + (index-1)*sizeof_elemtype),sizeof_elemtype);
     (*length)++;//表长加1
-    return OK;
+    
+    return SUCCESS;
 }
 
-
 /***************************************************************
- * @description: 在表中<pos>的位置上插入元素<elem>
+ * @brief 删除在表中序号<index>位置的元素
  * @param {sqlist_t} *list 顺序表的指针
- * @param {max_uint_t} pos 删除的位置（从1开始算起）
- * @return {status_t} 返回操作状态 <1>:成功  <0>:失败  <-2>:顺序表不存在或已满
+ * @param {max_uint_t} index 删除的位置（从1开始算起）
+ * @return {status_t} 
 ***************************************************************/
-status_t sqlist_delete_elem(const sqlist_t *list,max_uint_t pos)
+status_t sqlist_delete_data(sqlist_t *list,max_uint_t index)
 {
     if(!list)
     {
-        return OVERFLOW;//顺序表不存在
+        return NULL_POINTER_ERROR;//顺序表不存在
     }
-    if(pos<1||pos>list->length+1)//  允许pos=list->length，这种情况是在表尾删除
+    if(index<1||index>list->length+1)//  允许pos=list->length，这种情况是在表尾删除
     {
-        return ERRO;//越界
+        return INDEX_OUT_OF_BOUNDS_ERROR;//越界
     }
 
-    void *pelem = list->elem;
+    void *pdata = list->data;
     max_uint_t *length =(max_uint_t*)&list->length;
-    max_uint_t elem_size = list->elem_size;
+    max_uint_t sizeof_elemtype = list->sizeof_elemtype;
 
-    for(max_uint_t i=(pos-1);i>(*length);i++)//第<pos>个后的元素中的每个字节数据依次向前移动<elem_size>个字节
+    for(max_uint_t i=(index-1);i>(*length);i++)//第<index>个后的元素中的每个字节数据依次向前移动<sizeof_elemtype>个字节
     {
-        for(max_uint_t j=elem_size;j>0;j--)
+        for(max_uint_t j=sizeof_elemtype;j>0;j--)
         {
-            *((char*)pelem + i*elem_size + j-1) = *((char*)pelem +(i+1)*elem_size + j-1);
+            *((char*)pdata + i*sizeof_elemtype + j-1) = *((char*)pdata +(i+1)*sizeof_elemtype + j-1);
         }
     }
     (*length)--;//表长减1
-    return OK;
+    return SUCCESS ;
 }
