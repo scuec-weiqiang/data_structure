@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-03 20:43:52
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-07-07 15:30:07
+ * @LastEditTime: 2024-07-12 17:39:19
  * @FilePath: /data_structure/inc/sqlist.h
  * @Description: 
  * @
@@ -21,7 +21,7 @@ status_t sqlist_clear(sqlist_t *list);
 status_t sqlist_get_length(sqlist_t *list,max_uint_t *length);
 status_t sqlist_set_data(sqlist_t *list,max_uint_t index,void *data);
 status_t sqlist_get_data(sqlist_t *list,max_uint_t index,void *data);
-status_t sqlist_get_position(sqlist_t *list,void *data,max_uint_t *index);
+status_t sqlist_get_index(sqlist_t *list,void *data,max_uint_t *index);
 status_t sqlist_insert_data(sqlist_t *list,max_uint_t index,void *data);
 status_t sqlist_delete_data(sqlist_t *list,max_uint_t index);
 

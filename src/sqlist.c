@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-06-03 20:46:25
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-07-07 15:39:39
+ * @LastEditTime: 2024-07-12 17:52:27
  * @FilePath: /data_structure/src/sqlist.c
  * @brief: 
  * @
@@ -159,7 +159,7 @@ status_t sqlist_get_data(sqlist_t *list,max_uint_t index,void *data)
  * @param {max_uint_t} index 值为<data>的元素的位置（从1开始算起）
  * @return {status_t} 
 ***************************************************************/
-status_t sqlist_get_position(sqlist_t *list,void *data,max_uint_t *index)
+status_t sqlist_get_index(sqlist_t *list,void *data,max_uint_t *index)
 {
     if(!list)
     {

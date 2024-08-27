@@ -2,7 +2,7 @@
  * @Author: scuec-weiqiang scuec_weiqiang@qq.com
  * @Date: 2024-07-06 15:29:01
  * @LastEditors: scuec-weiqiang scuec_weiqiang@qq.com
- * @LastEditTime: 2024-07-07 15:00:59
+ * @LastEditTime: 2024-07-12 17:38:47
  * @FilePath: /data_structure/src/my_utils.c
  * @Description: 
  * @
@@ -244,5 +244,6 @@ int mem_cmp(void *mem1,void *mem2,unsigned int size)
         byte_mem2++;
         size--;
     }
+    
     return 0;
 }
